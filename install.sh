@@ -19,8 +19,8 @@ do
      mkdir /home/$user/jobs
    fi
    echo "USER COUNT: $user_count"
-   min=$((5 * $user_count))
-   echo "$min * * * * $user /usr/local/bin/slurm_fuzz_cron.sh" >> /etc/crontab
+   min=$((5 + $user_count))
+   echo "*/$min * * * * $user /usr/local/sbin/slurm_fuzz_cron.sh" >> /etc/crontab
    user_count=$(($user_count+1))
  fi
 done
