@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # example rand int 00-99
-declare -i myrand = $(cat /dev/urandom | tr -dc '0-9' | fold -w 2 | head -n 1)
+declare -i myrand=$(cat /dev/urandom | tr -dc '0-9' | fold -w 2 | head -n 1)
 # (how does the shell handle catting only a certain amount from
 #  /dev/urandom?) - 
 #  echo '#!/bin/bash \n cat /dev/urandom | tr -dc '0-9' | fold -w 2 | head -n 1' > run_rand.sh 
@@ -16,7 +16,7 @@ sleep_num=$((1 + $RANDOM % 3600))
 
 if [[ $myrand < $job_probability ]]; then
  #DO run a job this time
- echo -e "#!bin/bash \n #SBATCH -N $num_nodes \n $SBATCH -o fuzz.out \n srun -l hostname \n srun sleep $sleep_num" > /usr/local/share/slurm_fuzz.job
- sbatch /usr/local/share/slurm_fuzz.job 
+ echo -e "#!bin/bash \n #SBATCH -N $num_nodes \n $SBATCH -o fuzz.out \n srun -l hostname \n srun sleep $sleep_num" > /tmp/slurm_fuzz.job
+ sbatch /tmp/slurm_fuzz.job 
  exit
 fi 
