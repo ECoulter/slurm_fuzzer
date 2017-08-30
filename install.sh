@@ -8,21 +8,33 @@
 # I am assuming that wget and gcc are installed!
 # would this be better as an ansible playbook?
 
-for user in "fuzz1 fuzz2 fuzz3"
+declare -i user_count=1
+
+for user in fuzz{1..3}
 do
  if [[ -z $(getent passwd $user) ]]; then
+   echo "CREATING $user!"
    useradd $user
- fi
- if [[ ! -d /home/$user/jobs ]]; then
-   mkdir /home/$user/jobs
+   if [[ ! -d /home/$user/jobs ]]; then
+     mkdir /home/$user/jobs
+   fi
+   echo "USER COUNT: $user_count"
+   min=$((5 * $user_count))
+   echo "$min * * * * $user /usr/local/bin/slurm_fuzz_cron.sh" >> /etc/crontab
+   user_count=$(($user_count+1))
  fi
 done
 
-wget http://www.netlib.org/benchmark/hpl/hpl-2.2.tar.gz /tmp/
+if [[ ! -e /tmp/hpl-2.2.tar.gz ]]; then
+  wget -P /tmp http://www.netlib.org/benchmark/hpl/hpl-2.2.tar.gz 
+  tar xfz /tmp/hpl-2.2.tar.gz 
+fi
 
-tar xfz /tmp/hpl-2.2.tar.gz 
+if [[ ! -e /usr/local/sbin/slurm_fuzz_cron.sh ]]; then
+  cp ./slurm_fuzz_cron.sh /usr/local/sbin/slurm_fuzz_cron.sh
+fi
 
-cp slurm_fuzz.job /usr/local/share/
+#cp slurm_fuzz.job /usr/local/share/
 
 #insert config file
 #make
