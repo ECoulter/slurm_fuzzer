@@ -12,12 +12,12 @@ declare -i job_probability=50
 declare -i max_nodes=2
 
 num_nodes=$((1 + $RANDOM % $max_nodes))
-sleep_num=$((1 + $RANDOM % 3600))
+sleep_num=$((1 + $RANDOM % 60)) 
 
 if [[ $myrand < $job_probability ]]; then
  #DO run a job this time
  echo -e "#!bin/bash \n#SBATCH -N $num_nodes \n#SBATCH -o fuzz.out \nsrun -l hostname \nsrun sleep $sleep_num" > /tmp/slurm_fuzz.job
  sbatch /tmp/slurm_fuzz.job 
-# rm /tmp/slurm_fuzz.job
+ rm /tmp/slurm_fuzz.job
  exit
 fi 
