@@ -22,6 +22,8 @@ do
  fi
 done
 
+wwsh file sync # sync passwd file for compute nodes! (If not using Warewulf, modify this!)
+
 if [[ ! -e /tmp/hpl-2.2.tar.gz ]]; then
   wget -P /tmp http://www.netlib.org/benchmark/hpl/hpl-2.2.tar.gz 
   tar xfz /tmp/hpl-2.2.tar.gz 
