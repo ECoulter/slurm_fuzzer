@@ -14,11 +14,8 @@ for user in fuzz{1..3}
 do
  if [[ -z $(getent passwd $user) ]]; then
    echo "CREATING $user!"
-   useradd $user
-   if [[ ! -d /home/$user/jobs ]]; then
-     mkdir /home/$user/jobs
-   fi
-   echo "USER COUNT: $user_count"
+   adduser $user
+   su - $user -c "sleep 0" #to trigger the cluster_env script
    min=$((5 + $user_count))
    echo "*/$min * * * * $user /usr/local/sbin/slurm_fuzz_cron.sh" >> /etc/crontab
    user_count=$(($user_count+1))
@@ -33,8 +30,6 @@ fi
 if [[ ! -e /usr/local/sbin/slurm_fuzz_cron.sh ]]; then
   cp ./slurm_fuzz_cron.sh /usr/local/sbin/slurm_fuzz_cron.sh
 fi
-
-#cp slurm_fuzz.job /usr/local/share/
 
 #insert config file
 #make
